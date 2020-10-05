@@ -1,24 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+
+import PdfWithImage from './PdfWithImage';
+import RechartGraph from './RechartGraph';
 
 function App() {
+  const [image, setImage] = useState(null);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div>
+      <RechartGraph handleImage={setImage} />
+      {image && (
+        <PDFViewer>
+          <PdfWithImage image={image} />
+        </PDFViewer>
+      )}
+
+      {image && (
+        <PDFDownloadLink
+          document={<PdfWithImage image={image} />}
+          fileName="somename.pdf"
         >
-          Learn React
-        </a>
-      </header>
+          {({ blob, url, loading, error }) =>
+            loading ? 'Loading document...' : 'Download now!'
+          }
+        </PDFDownloadLink>
+      )}
     </div>
   );
 }
